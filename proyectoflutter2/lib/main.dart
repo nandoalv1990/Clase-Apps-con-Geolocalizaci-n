@@ -82,9 +82,20 @@ class _CalculadoraUIState extends State<CalculadoraUI> {
             ],
           ),
           SizedBox(height: 20,),
-          ElevatedButton(
-          onPressed: sumar, 
-          child: Text('sumar'),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.favorite,
+                color: Colors.green,
+                size: 30.0,
+              ),
+              SizedBox(width: 10.0,),
+              ElevatedButton(
+                onPressed: sumar, 
+               child: Text('sumar'),
+          ),
+            ],
           ),
           SizedBox(height: 10,),
           Container(
