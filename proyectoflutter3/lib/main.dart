@@ -1,5 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+// Caluladora sencilla
 void main() {
   runApp(CalculadoraCompletaApp());
 }
@@ -52,6 +53,15 @@ class _CalculadoraUIState extends State<CalculadoraUI> {
     });
   }
 
+  // Función para borrar
+  void borrar(){
+    setState(() {
+      num1Controller.clear();
+      num2Controller.clear();
+      resultado = "0";
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -97,14 +107,56 @@ class _CalculadoraUIState extends State<CalculadoraUI> {
                 Expanded(
                   child: IconButton(
                     onPressed: () => calcular('+'), 
-                    icon: Icon(Icons.add)
+                    icon: Icon(Icons.add),
+                    style: ButtonStyle(),
+                  ),
+                ),
+                SizedBox(width: 10),
+                Expanded(
+                  child: IconButton(
+                    onPressed: () => calcular('-'),
+                    icon: Icon(Icons.remove),
+                   ),
+                ),
+                SizedBox(width: 10),
+                Expanded(
+                  child: IconButton(
+                    onPressed: () => calcular('*'),
+                    icon: Icon(Icons.clear),
+                   ),
+                ),
+                SizedBox(width: 10),
+                Expanded(
+                  child: IconButton(
+                   onPressed: () => calcular('/'),
+                   icon: Icon(CupertinoIcons.divide),
                   ),
                 ),
               ],
             ),
+            SizedBox(height: 20),
+            // Botón para borrar todo
+            ElevatedButton(
+              onPressed: borrar,
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
+               child: Text('Borrar / AC'),
+            ),
+            SizedBox(height: 20),
+            // Resultado
+            Container(
+              padding: EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.deepPurple[50],
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Text(
+                'Resultado: $resultado',
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              ),
+            )
           ],
         ),
-        ),
+      ),
     );
   }
 }
