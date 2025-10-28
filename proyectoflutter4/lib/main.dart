@@ -201,11 +201,45 @@ class AppLayout extends StatelessWidget {
                     height: double.infinity,
                     width: double.infinity,
                     padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                    child:,
+                    child: const Align(
+                      alignment: Alignment.bottomRight,
+                      child: Text(
+                        "3x2",
+                        style: TextStyle( 
+                          fontSize: 65,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-              ],
-            ),
+                Expanded(
+                  flex: 7,
+                  child: Container(
+                    color:  Colors.black,
+                    padding: const EdgeInsets.all(10.0),
+                    child: GridView.count(
+                      crossAxisCount: 4,
+                      crossAxisSpacing: 20.0,
+                      mainAxisSpacing: 16,
+                      shrinkWrap: true,
+                      children: List.generate(controllers.length, (index) {
+                        return Container(
+                          decoration: BoxDecoration(
+                            color: colors[index],
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(255),
+                            ),
+                          ),
+                          child: Center(
+                            child: controllers[index],
+                          ),
+                          );
+                          })
+                      ),
+                    ),
+                  ),
+              ]),
           ),
         ),
       ),
