@@ -7,6 +7,29 @@ void main() {
 class AppLayout extends StatelessWidget {
   const AppLayout({super.key});
 
+  static const colors = [
+    Color(0xff5f726c),
+    Color(0xff5f726c),
+    Color(0xff5f726c),
+    Color(0xff2d7359),
+    Color.fromARGB(255, 25, 25, 25),
+    Color.fromARGB(255, 25, 25, 25),
+    Color.fromARGB(255, 25, 25, 25),
+    Color(0xff2d7359),
+    Color.fromARGB(255, 25, 25, 25),
+    Color.fromARGB(255, 25, 25, 25),
+    Color.fromARGB(255, 25, 25, 25),
+    Color(0xff2d7359),
+    Color.fromARGB(255, 25, 25, 25),
+    Color.fromARGB(255, 25, 25, 25),
+    Color.fromARGB(255, 25, 25, 25),
+    Color(0xff2d7359),
+    Color.fromARGB(255, 25, 25, 25),
+    Color.fromARGB(255, 25, 25, 25),
+    Color.fromARGB(255, 25, 25, 25),
+    Color(0xff2d7359),
+  ];
+
   static const controllers = [
     Text(
       "AC",
