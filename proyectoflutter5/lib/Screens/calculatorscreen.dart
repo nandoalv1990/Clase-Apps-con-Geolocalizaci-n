@@ -1,3 +1,5 @@
+import 'dart:js_interop';
+
 import 'package:flutter/material.dart';
 import 'package:math_expressions/math_expressions.dart';
 
@@ -40,16 +42,23 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   void _calculateResult(){
     String expression = _input.replaceAll("X", "*").replaceAll("÷", "/");
    /*try {
-      // ignore: deprecated_member_use
-      ShuntingYardParser p = Parser(expression);
+      Parser p = Parser(expression);
       Expression exp = p.parse(expression);
       ContextModel cm = ContextModel();
       double eval = exp.evaluate(type, context)
     } catch (e) {
       _output = "ERROR de SYNTX";
     }*/
+    try {
+     ExpressionParser p = GrammarParser();
+     Expression exp = p.parse(expression);
+     var cm = ContextModel();
+     var evaluator = RealEvaluator(cm);
+     num eval = evaluator.evaluate(exp);
+    } catch (e) {
+      _output = "ERROR de SYNTX";
+    }
   }
-
 
   @override
   Widget build(BuildContext context) {
