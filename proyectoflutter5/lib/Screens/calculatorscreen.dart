@@ -1,5 +1,4 @@
 import 'dart:js_interop';
-
 import 'package:flutter/material.dart';
 import 'package:math_expressions/math_expressions.dart';
 
@@ -57,6 +56,8 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
      num eval = evaluator.evaluate(exp);
     } catch (e) {
       _output = "ERROR de SYNTX";
+      print(_output);
+
     }
   }
 
