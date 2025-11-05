@@ -1,4 +1,4 @@
-import 'dart:js_interop';
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:math_expressions/math_expressions.dart';
 
@@ -33,31 +33,23 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       } else if (text == "="){
         _calculateResult();
       } else {
-        _input += text;
+        _input += text; 
+        _calculateResult();
       }
     });
   }
 
   void _calculateResult(){
-    String expression = _input.replaceAll("X", "*").replaceAll("÷", "/");
-   /*try {
-      Parser p = Parser(expression);
-      Expression exp = p.parse(expression);
-      ContextModel cm = ContextModel();
-      double eval = exp.evaluate(type, context)
-    } catch (e) {
-      _output = "ERROR de SYNTX";
-    }*/
-    try {
+     String expression = _input.replaceAll("X", "*").replaceAll("÷", "/");
      ExpressionParser p = GrammarParser();
+    try {
      Expression exp = p.parse(expression);
      var cm = ContextModel();
      var evaluator = RealEvaluator(cm);
      num eval = evaluator.evaluate(exp);
+     _output = eval.toString();
     } catch (e) {
-      _output = "ERROR de SYNTX";
-      print(_output);
-
+      _output = "";
     }
   }
 
@@ -71,7 +63,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
           children: [
             // Pantalla de resultados
             Expanded(
-              flex: 3,
+              flex: 7,
               child: Container(
                 alignment: Alignment.bottomRight,
                 padding: const EdgeInsets.all(24.0),
@@ -83,10 +75,65 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                       _input,
                       style: const TextStyle(
                         color: Colors.white,
+                        fontSize: 60.0,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10.0,
+                    ),
+                    Text(
+                      _output,
+                      style: const TextStyle(
+                        color: Colors.white,
                         fontSize: 40.0,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ],
+                ),
+              ),
+            ),
+            // Botones
+            Expanded(
+              flex: 7,
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                decoration: const BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(30),
+                  ),
+                ),
+                child: GridView.builder(
+                  itemCount: buttons.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 4,
+                    crossAxisSpacing: 15.0,
+                    mainAxisSpacing: 15.0
+                  ),
+                  itemBuilder: (context, index){
+                    final text = buttons[index];
+                    final isOperator = ["÷", "X", "-", "+", "="].contains(text);
+                    final isSpecial = ["AC", "⌫", "%", "()"].contains(text);
+                    Color bgColor = isOperator? const Color(0xff2d7359) : (isSpecial? const Color(0xff5f726c): const Color.fromARGB(255, 25, 25, 25));
+                    return ElevatedButton(
+                      onPressed: () => _onButtonPressed(text), 
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: bgColor,
+                        shape: const CircleBorder(),
+                        padding: const EdgeInsets.all(20),
+                      ),
+                      child: Text(
+                        text, // Este se usa en _CalculateResult()
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 28.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ),
             ),
