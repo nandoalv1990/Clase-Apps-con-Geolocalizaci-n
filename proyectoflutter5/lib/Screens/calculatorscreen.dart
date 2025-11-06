@@ -116,7 +116,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                     final text = buttons[index];
                     final isOperator = ["÷", "X", "-", "+", "="].contains(text);
                     final isSpecial = ["AC", "⌫", "%", "()"].contains(text);
-                    Color bgColor = isOperator? const Color(0xff2d7359) : (isSpecial? const Color(0xff5f726c): const Color.fromARGB(255, 25, 25, 25));
+                    Color bgColor = isOperator? const Color.fromARGB(255, 255, 0, 255) : (isSpecial? const Color(0xff5f726c): const Color.fromARGB(255, 25, 25, 25));
                     return ElevatedButton(
                       onPressed: () => _onButtonPressed(text), 
                       style: ElevatedButton.styleFrom(
