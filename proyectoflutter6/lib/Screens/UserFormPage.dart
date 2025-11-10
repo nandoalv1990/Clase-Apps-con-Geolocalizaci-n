@@ -54,28 +54,37 @@ class _UserFormPageState extends State<UserFormPage> {
   @override
   void initState() {
     super.initState();
-    DatabaseHelper.instance.getUsers().then((value){
-      setState(
-        () {
-          _users = value;
-        }
-      );
-    });
+    loadUsers();
+  }
+
+  void loadUsers() async {
+    try {
+      final value = await DatabaseHelper.instance.getUsers();
+      setState(() {
+        _users = value.map<User>((e) => User.fromMap(e)).toList();
+      });
+    } catch (e) {
+      print("ERROR$e");
+    }
   }
 
   Future<void> _addUser() async {
+    try {
     if(_formKey.currentState!.validate()){
-      final newUser = User(name: _nameCtrl.text, email: _emailCtrl.text);
-      await DatabaseHelper.instance.insertUser(newUser);
-      _nameCtrl.clear();
-      _emailCtrl.clear();
-
-      // Recargar usuarios desde la DB
-      final updatedList = await DatabaseHelper.instance.getUsers();
-      setState(() {
-        _users = updatedList;
-      });
-    }
+     final newUser = User(name: _nameCtrl.text, email: _emailCtrl.text);
+     await DatabaseHelper.instance.insertUser(newUser);
+     _nameCtrl.clear();
+     _emailCtrl.clear();
+  
+     // Recargar usuarios desde la DB
+     final updatedList = await DatabaseHelper.instance.getUsers();
+     setState(() {
+       _users = updatedList.map<User>((e) => User.fromMap(e)).toList();
+       }); 
+     }
+   } on Exception catch (e) {
+       print("ERROR$e");
+     }
   }
 
   Widget build(BuildContext context) {
@@ -120,5 +129,9 @@ class DatabaseHelper {
     return await db.insert('users', user.toMap());
   }
 
-  Future<List
+  Future<List> getUsers() async {
+    Database db = await database;
+    final List<Map<String, dynamic>> maps = await db.query('users');
+    return List.generate(maps.length, (i) => User.fromMap(maps[i]));
+  }
 }
