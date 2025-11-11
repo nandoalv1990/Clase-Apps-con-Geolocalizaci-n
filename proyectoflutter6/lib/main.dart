@@ -1,11 +1,12 @@
+// Mostrar plataforma
 import 'dart:io' show Platform; 
-
 import 'package:flutter/material.dart';
-import 'Screens/UserFormPage.dart';
+import 'Screens/_UserFormPage.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 void main() {
   runApp(const MainApp());
+  // Inicialización de SQLite
   if (Platform.isWindows || Platform.isLinux || Platform.isMacOS){
     sqfliteFfiInit();
     databaseFactory = databaseFactoryFfi;

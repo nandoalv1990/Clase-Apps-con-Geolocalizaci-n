@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:proyectoflutter6/DatabaseHelper.dart';
+import 'package:proyectoflutter6/_DatabaseHelper.dart';
 import 'package:flutter/material.dart';
 
 // Formulario
@@ -28,7 +28,8 @@ class _UserFormPageState extends State<UserFormPage> {
     try {
       final value = await DatabaseHelper.instance.getUsers();
       setState(() {
-        _users = value.map<User>((e) => User.fromMap(e)).toList();
+        //_users = value.map<User>((e) => User.fromMap(e)).toList();
+        _users = value.toList();
       });
     } catch (e) {
       print("ERROR$e");
@@ -46,7 +47,8 @@ class _UserFormPageState extends State<UserFormPage> {
      // Recargar usuarios desde la DB
      final updatedList = await DatabaseHelper.instance.getUsers();
      setState(() {
-       _users = updatedList.map<User>((e) => User.fromMap(e)).toList();
+       //_users = updatedList.map<User>((e) => User.fromMap(e)).toList();
+       _users = updatedList.toList();
        }); 
      }
    } on Exception catch (e) {

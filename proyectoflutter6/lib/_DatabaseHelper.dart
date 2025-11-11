@@ -73,8 +73,8 @@ class DatabaseHelper {
     Database db = await database;
     return await db.insert('users', user.toMap());
   }
-
-  Future<List> getUsers() async {
+  // Agregar la característica <User>
+  Future<List<User>> getUsers() async {
     Database db = await database;
     final List<Map<String, dynamic>> maps = await db.query('users');
     return List.generate(maps.length, (i) => User.fromMap(maps[i]));
