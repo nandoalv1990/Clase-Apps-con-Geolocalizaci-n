@@ -1,39 +1,6 @@
 import 'dart:async';
-import 'dart:io';
-
+import 'package:proyectoflutter6/DatabaseHelper.dart';
 import 'package:flutter/material.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
-
-//Modelo simple de usuario
-class User{
-  final int? id;
-  final String name;
-  final String email;
-
-  User(
-    {this.id, required this.name, required this.email}
-  );
-
-  // Mapa para SQL
-  Map<String, dynamic> toMap() {
-    return {
-      'id' : id,
-      'name' : name,
-      'email' : email,
-    };
-  }
-
-  // Objeto User (fila SQL)
-  factory User.fromMap(Map<String, dynamic> map){
-    return User(
-      id: map['id'],
-      name: map['name'],
-      email: map['email'],
-    );
-  }
-}
 
 // Formulario
 
@@ -87,51 +54,86 @@ class _UserFormPageState extends State<UserFormPage> {
      }
   }
 
+  final _decorationForm1 = const InputDecoration(
+    label: Text("Nombre"),
+    border: OutlineInputBorder(),
+  );
+   final _decorationForm2 = const InputDecoration(
+    label: Text("Correo electrónico"),
+    border: OutlineInputBorder(),
+  );
+
+  final _spacerV1 = const SizedBox(
+    height: 12,
+  );
+
+  final _styleBTN = ElevatedButton.styleFrom(
+    backgroundColor: Colors.tealAccent,
+      shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(8),
+        ),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12.0)
+  );
+
+  @override
   Widget build(BuildContext context) {
-    return Container();
-  }
-}
-
-// Clase auxiliar para manejar SQLite
-class DatabaseHelper {
-  static final DatabaseHelper instance = DatabaseHelper._internal();
-  static Database? _database;
-
-  DatabaseHelper._internal();
-
-  Future<Database> get database async {
-    if (_database != null) return _database!;
-    _database = await _initDB("users.db");
-    return _database!;
-  }
-  
-  Future<Database?> _initDB(String fileName) async {
-    Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, fileName);
-    return await openDatabase(
-      path,
-      version: 1,
-      onCreate: _onCreate,
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Registro de usuarios"),
+        backgroundColor: Colors.teal,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          children: [
+            Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  TextFormField(
+                    controller: _nameCtrl,
+                    decoration: _decorationForm1,
+                    validator:(value) => 
+                    value!.isEmpty ? "Ingresa el nombre" : null,
+                  ),
+                  _spacerV1,
+                  TextFormField(
+                    controller: _emailCtrl,
+                    decoration: _decorationForm2,
+                    validator: (value) => 
+                    value!.isEmpty ? "Ingresa el email" : null,
+                  ),
+                  _spacerV1,
+                  ElevatedButton.icon(
+                    onPressed: _addUser, 
+                    icon: const Icon(Icons.save),
+                    label: const Text('Guardar'),
+                    style: _styleBTN,
+                  ),
+                ],
+              ),
+            ),
+            _spacerV1,
+            const Divider(),
+            const Text("Usuarios registrados:",
+            style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: _users.length,
+                itemBuilder: (context, index){
+                  final user = _users[index];
+                  return ListTile(
+                    leading: const Icon (Icons.person, color: Colors.teal),
+                    title: Text(user.name),
+                    subtitle: Text(user.email),
+                  );
+                },
+             ),
+            ),
+          ],
+        ),
+      ),
     );
-  }
-  
-  Future _onCreate(Database db, int version) async {
-    await db.execute(
-      ''' CREATE TABLE users (
-      id INTEGER PRIMARY KEY AUTOINCREMENT, 
-      name TEXT,
-      email TEXT)
-      ''');
-  }
-
-  Future<int> insertUser(User user) async {
-    Database db = await database;
-    return await db.insert('users', user.toMap());
-  }
-
-  Future<List> getUsers() async {
-    Database db = await database;
-    final List<Map<String, dynamic>> maps = await db.query('users');
-    return List.generate(maps.length, (i) => User.fromMap(maps[i]));
   }
 }

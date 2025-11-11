@@ -1,8 +1,15 @@
+import 'dart:io' show Platform; 
+
 import 'package:flutter/material.dart';
 import 'Screens/UserFormPage.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 void main() {
   runApp(const MainApp());
+  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS){
+    sqfliteFfiInit();
+    databaseFactory = databaseFactoryFfi;
+  }
 }
 
 class MainApp extends StatelessWidget {
