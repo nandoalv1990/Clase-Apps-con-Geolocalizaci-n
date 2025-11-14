@@ -131,7 +131,7 @@ class _UserFormPageState extends State<UserFormPage> {
                     subtitle: Text(user.email),
                   );
                 },
-             ),
+              ),
             ),
           ],
         ),

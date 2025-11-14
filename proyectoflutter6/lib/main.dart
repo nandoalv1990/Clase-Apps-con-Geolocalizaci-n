@@ -1,5 +1,5 @@
-// Mostrar plataforma
-import 'dart:io' show Platform; 
+
+import 'dart:io' show Platform; // Mostrar plataforma
 import 'package:flutter/material.dart';
 import 'Screens/_UserFormPage.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
