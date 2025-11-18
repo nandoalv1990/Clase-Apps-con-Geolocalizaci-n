@@ -22,6 +22,8 @@
               android:name="com.google.android.geo.API_KEY"
               android:value="AIzaSyCcMfDBE07yxVLfChOrfnYPfSrSCoz4zdE"
               />
+              <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+              <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
