@@ -9,7 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  google_maps_flutter_android: ^2.18.5
+  google_maps_flutter: ^2.14.0
   geolocator: ^14.0.2
   permission_handler: ^12.0.1
 
