@@ -1,6 +1,12 @@
 import "package:flutter/material.dart";
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_maps_flutter_web/google_maps_flutter_web.dart';
+
+/*
+IMPORTANTE: 24/11/2025
+INVESTIGAR COMO INTEGRAR GOOGLE_MAPS_FLUTTER_WEB EN ESTA APP
+*/
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -52,8 +58,28 @@ final Set<Marker> _markers = {};
 }
 
 
+  @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Google Maps en Flutter"),
+        backgroundColor: Colors.teal,
+      ),
+      body: GoogleMap(
+        onMapCreated: (controller) => _mapController = controller,
+        initialCameraPosition: CameraPosition(
+          target: _currentPosition,
+          zoom: 14,
+        ),
+        myLocationEnabled: true,
+        markers: _markers,
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.teal,
+        onPressed: _determinePosition,
+        child: const Icon(Icons.my_location),
+      ),
+    );
   }
   
 }
