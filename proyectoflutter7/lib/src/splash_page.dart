@@ -1,12 +1,25 @@
 import "package:flutter/material.dart";
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:google_maps_flutter_web/google_maps_flutter_web.dart';
-
+import 'widgets/android_service.dart';
+import 'widgets/desktop_service.dart';
+import 'widgets/web_service.dart';
+import 'package:flutter/widgets.dart';
 /*
 IMPORTANTE: 24/11/2025
 INVESTIGAR COMO INTEGRAR GOOGLE_MAPS_FLUTTER_WEB EN ESTA APP
 */
+
+// Clase iniciadora
+abstract class MapBuilderBase {
+  Widget buildMap({
+    required Function onMapCreated,
+    required Function onTap,
+    required Set markers,
+    required Set polylines,
+    required LatLng initialCameraPosition,
+  });
+}
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
