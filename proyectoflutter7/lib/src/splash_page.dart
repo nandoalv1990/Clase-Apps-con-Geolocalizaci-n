@@ -39,7 +39,7 @@ late MapBuilderBase mapService;
   void initState(){
     super.initState();
 
-    // Detectar plataforma y elige servicio
+    // Detectar plataforma y elige servicio (Deberá moverse a map_builder_factory de preferencia)
     if (Platform.isAndroid){
       mapService = MapBuilderAndroid();
     } else if (Platform.isWindows || Platform.isLinux || Platform.isMacOS){
