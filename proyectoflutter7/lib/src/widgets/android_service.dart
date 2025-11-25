@@ -1,27 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:proyectoflutter7/src/splash_page.dart';
+import '../splash_page.dart'; // Para usar MapBuilderBase
 
 class MapBuilderAndroid implements MapBuilderBase {
   @override
+  // Ajustar clase a la interfaz
   Widget buildMap({
-    required Functi(GoogleMapController) onMapCreated,
-    required Function(LatLng) onTap,
-    required set<Marker> markers,
-    required Set<Polyline> polylines,
-    required LatLng initialPosition,
+    required LatLng initialCameraPosition,
+    required Set<dynamic> markers,
+    required Set<dynamic> polylines,
+    required Function onMapCreated,
+    required Function onTap,
   }){
-    return GoogleMap(initialCameraPosition: CameraPosition(
-      target: initialPosition,
-      zoom: 14,
-    ),
-    markers: markers,
-    polylines: polylines,
-    myLocationButtonEnabled: true,
-    onMapCreated: onMapCreated,
-    onTap: onTap,
+    return GoogleMap(
+      onMapCreated:(controller) => onMapCreated(controller),
+      initialCameraPosition: CameraPosition(
+        target: initialCameraPosition,
+        zoom: 14,
+      ),
+      markers: markers.cast<Marker>(),
+      polylines: polylines.cast<Polyline>(),
+      myLocationEnabled: false,
+      onTap:(LatLng) => onTap(LatLng),
     );
   }
-  
 }

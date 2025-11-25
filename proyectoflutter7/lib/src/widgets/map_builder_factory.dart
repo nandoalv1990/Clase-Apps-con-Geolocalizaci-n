@@ -13,7 +13,7 @@ class MapBuilderFactory {
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS){
       return MapBuilderDesktop();
     }
-    return MapBuilderDesktop(); //
+    return MapBuilderDesktop(); // Defecto
   }
   
 }

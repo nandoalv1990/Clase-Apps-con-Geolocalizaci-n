@@ -1,16 +1,14 @@
 import "package:flutter/material.dart";
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'dart:io' show Platform;
+
 import 'widgets/android_service.dart';
 import 'widgets/desktop_service.dart';
 import 'widgets/web_service.dart';
-import 'package:flutter/widgets.dart';
-/*
-IMPORTANTE: 24/11/2025
-INVESTIGAR COMO INTEGRAR GOOGLE_MAPS_FLUTTER_WEB EN ESTA APP
-*/
+//import 'package:flutter/widgets.dart';
 
-// Clase iniciadora
+// Clase iniciadora - Conectar con servicios
 abstract class MapBuilderBase {
   Widget buildMap({
     required Function onMapCreated,
@@ -33,10 +31,22 @@ GoogleMapController? _mapController;
 //20.527102, -100.8116
 LatLng _currentPosition = const LatLng(20.527102, -100.8116);
 final Set<Marker> _markers = {};
+final Set<Polyline> _polylines = {};
+
+late MapBuilderBase mapService;
 
   @override
   void initState(){
     super.initState();
+
+    // Detectar plataforma y elige servicio
+    if (Platform.isAndroid){
+      mapService = MapBuilderAndroid();
+    } else if (Platform.isWindows || Platform.isLinux || Platform.isMacOS){
+      //mapService = MapBuilderDesktop();
+    }else {
+      //mapService = MapBuilderWeb();
+    }
     _determinePosition();
   }
 
@@ -78,15 +88,24 @@ final Set<Marker> _markers = {};
         title: const Text("Google Maps en Flutter"),
         backgroundColor: Colors.teal,
       ),
-      body: GoogleMap(
-        onMapCreated: (controller) => _mapController = controller,
-        initialCameraPosition: CameraPosition(
-          target: _currentPosition,
-          zoom: 14,
-        ),
-        myLocationEnabled: true,
-        markers: _markers,
+      body: mapService.buildMap(
+        onMapCreated: (controller) => _mapController = controller, 
+        onTap: (LatLng point){
+          setState(() {
+            _markers.add(
+              Marker(
+                markerId: MarkerId(point.toString()),
+                position: point,
+            ),
+          );
+          });
+        }, 
+        markers: _markers, 
+        polylines: _polylines, 
+        initialCameraPosition: _currentPosition,
       ),
+
+
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.teal,
         onPressed: _determinePosition,
