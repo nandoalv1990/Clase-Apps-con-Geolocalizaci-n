@@ -1,23 +1,13 @@
+
 import "package:flutter/material.dart";
 import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart' as gmaps;
 import 'dart:io' show Platform;
 
+import 'widgets/map_builder_base.dart';
 import 'widgets/android_service.dart';
 import 'widgets/desktop_service.dart';
 import 'widgets/web_service.dart';
-//import 'package:flutter/widgets.dart';
-
-// Clase iniciadora - Conectar con servicios
-abstract class MapBuilderBase {
-  Widget buildMap({
-    required Function onMapCreated,
-    required Function onTap,
-    required Set markers,
-    required Set polylines,
-    required LatLng initialCameraPosition,
-  });
-}
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -27,85 +17,84 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
-GoogleMapController? _mapController;
-//20.527102, -100.8116
-LatLng _currentPosition = const LatLng(20.527102, -100.8116);
-final Set<Marker> _markers = {};
-final Set<Polyline> _polylines = {};
+  gmaps.GoogleMapController? _mapController;
 
-late MapBuilderBase mapService;
+  // Posición inicial
+  gmaps.LatLng _currentPosition = const gmaps.LatLng(20.527102, -100.8116);
+
+  // (Android)
+  final Set<gmaps.Marker> _markers = {};
+  final Set<gmaps.Polyline> _polylines = {};
+
+  // Variable genérica para cualquier implementación
+  late MapBuilderBase<dynamic, dynamic, dynamic, dynamic> mapService;
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
 
-    // Detectar plataforma y elige servicio (Deberá moverse a map_builder_factory de preferencia)
-    if (Platform.isAndroid){
+    // Detectar plataforma y asignar implementación
+    if (Platform.isAndroid) {
       mapService = MapBuilderAndroid();
-    } else if (Platform.isWindows || Platform.isLinux || Platform.isMacOS){
-      //mapService = MapBuilderDesktop();
-    }else {
-      //mapService = MapBuilderWeb();
+    } else if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      mapService = MapBuilderDesktop();
+    } else {
+      mapService = MapBuilderWeb();
     }
+
     _determinePosition();
   }
 
   // Obtener ubicación actual del usuario
   Future<void> _determinePosition() async {
-    bool serviceEnabled;
-    LocationPermission permission;
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) return;
 
-    // Comprobar que el GPS está activo
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled){
-      return;
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) return;
     }
+    if (permission == LocationPermission.deniedForever) return;
 
-  // Permisos
-  permission = await Geolocator.checkPermission();
-  if (permission == LocationPermission.denied){
-    permission == await Geolocator.requestPermission();
-    if (permission == LocationPermission.denied){
-      return;
-    }
+    Position position = await Geolocator.getCurrentPosition();
+
+    setState(() {
+      _currentPosition = gmaps.LatLng(position.latitude, position.longitude);
+    });
   }
-  if (permission == LocationPermission.deniedForever){
-    return;
-  }
-  // Obtener posición
-  Position position = await Geolocator.getCurrentPosition();
-
-  setState(() {
-    _currentPosition = LatLng(position.latitude, position.longitude);
-  });
-}
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Google Maps en Flutter"),
+        title: const Text("Mapa Multiplataforma"),
         backgroundColor: Colors.teal,
       ),
       body: mapService.buildMap(
-        onMapCreated: (controller) => _mapController = controller, 
-        onTap: (LatLng point){
-          setState(() {
-            _markers.add(
-              Marker(
-                markerId: MarkerId(point.toString()),
-                position: point,
-            ),
-          );
-          });
-        }, 
-        markers: _markers, 
-        polylines: _polylines, 
+        onMapCreated: (controller) {
+          // Android: el controller es GoogleMapController
+          if (controller is gmaps.GoogleMapController) {
+            _mapController = controller;
+          }
+        },
+        onTap: (point) {
+          // Android: point será gmaps.LatLng
+          if (point is gmaps.LatLng) {
+            setState(() {
+              _markers.add(
+                gmaps.Marker(
+                  markerId: gmaps.MarkerId(point.toString()),
+                  position: point,
+                ),
+              );
+            });
+          }
+        },
+        markers: _markers,
+        polylines: _polylines,
         initialCameraPosition: _currentPosition,
       ),
-
-
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.teal,
         onPressed: _determinePosition,
@@ -113,5 +102,4 @@ late MapBuilderBase mapService;
       ),
     );
   }
-  
 }
