@@ -1,4 +1,3 @@
-import 'dart:isolate';
 import 'package:background_locator_2/location_dto.dart';
 import 'db_helper.dart';
 
