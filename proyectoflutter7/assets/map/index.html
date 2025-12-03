@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>html,body,#map{height:100%;margin:0;padding:0}</style>
+</head>
+<body>
+  <div id="map"></div>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    // Leer key desde el query string de la URL
+    const params = new URLSearchParams(window.location.search);
+    const key = params.get('key') || '';
+
+    // Defecto a una ubicación central y nivel de zoom
+    const map = L.map('map').setView([20.527102, -100.8116], 13);
+
+    const tileUrl = key
+      ? `https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=${key}`
+      : 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+
+    L.tileLayer(tileUrl, {
+      attribution: key ? '© MapTiler © OpenStreetMap contributors' : '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Enviar coordenadas de clics al host Flutter
+    map.on('click', function(e) {
+      const payload = JSON.stringify({lat: e.latlng.lat, lng: e.latlng.lng});
+      if (window.Flutter && window.Flutter.postMessage) {
+        window.Flutter.postMessage(payload);
+      } else if (window.flutter_inappwebview && window.flutter_inappwebview.postMessage) {
+        window.flutter_inappwebview.postMessage(payload);
+      }
+    });
+
+    // Funciones para agregar y limpiar marcadores
+    const _markers = [];
+    function addMarker(lat, lng) {
+      const m = L.marker([lat, lng]).addTo(map);
+      _markers.push(m);
+      return true;
+    }
+
+    function clearMarkers() {
+      _markers.forEach(m => map.removeLayer(m));
+      _markers.length = 0;
+    }
+
+    // Exponer funciones al contexto global
+    window.addMarker = addMarker;
+    window.clearMarkers = clearMarkers;
+  </script>
+</body>
+</html>

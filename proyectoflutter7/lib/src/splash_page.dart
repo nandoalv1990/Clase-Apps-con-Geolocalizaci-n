@@ -16,7 +16,7 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
-  gmaps.GoogleMapController? _mapController;
+  
 
   // Posición inicial
   gmaps.LatLng _currentPosition = const gmaps.LatLng(20.527102, -100.8116);
@@ -62,7 +62,8 @@ class _SplashPageState extends State<SplashPage> {
       _currentPosition = gmaps.LatLng(position.latitude, position.longitude);
     });
   }
-
+  // ignore: unused_field
+  gmaps.GoogleMapController? _mapController;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
