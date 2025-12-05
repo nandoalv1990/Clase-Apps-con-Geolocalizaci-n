@@ -58,8 +58,41 @@ class _RastrearPageState extends State<RastrearPage> {
     );
   }
 
+  Future<void> detenerRastreo() async {
+    await BackgroundLocator.unRegisterLocationUpdate();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Rastreo en segundo plano"),
+      ),
+      body: gmaps.GoogleMap(
+        initialCameraPosition: gmaps.CameraPosition(
+          target: gmaps.LatLng(19.4326, -99.1332),
+          zoom: 14.0,
+          ),
+          onMapCreated: (c) => controller = c ,
+          markers: markers,
+        ),
+        bottomNavigationBar:  Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            ElevatedButton(
+              onPressed: iniciarRastreo, 
+              child: Text("Iniciar Rastreo"),
+            ),
+            ElevatedButton(
+              onPressed: detenerRastreo, 
+              child: Text("Detener"),
+            ),
+            ElevatedButton(
+              onPressed: cargarPuntos, 
+              child: Text("Recargar"),
+            ),
+          ],
+        ),
+    );
   }
 }
