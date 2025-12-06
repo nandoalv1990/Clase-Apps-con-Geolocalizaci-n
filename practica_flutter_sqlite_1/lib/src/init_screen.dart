@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import '../data/user_dao.dart';
+import '../data/db_helper.dart';
+import '../models/user.dart';
 
 class InitScreen extends StatefulWidget {
   const InitScreen({super.key});
@@ -8,8 +11,94 @@ class InitScreen extends StatefulWidget {
 }
 
 class _InitScreenState extends State<InitScreen> {
+  final usernameCtrl = TextEditingController();
+  final passwordCtrl = TextEditingController();
+  final dao = UserDao();
+
+  List<User> users = [];
+
+  @override
+  void initState() {
+    super.initState();
+    cargarUsuarios();
+  }
+
+  Future<void> cargarUsuarios() async {
+    final listaUsuarios = await dao.getUsers();
+    setState(() => users = listaUsuarios);
+  }
+
+  Future<void> registrar() async {
+    if (usernameCtrl.text.isEmpty || passwordCtrl.text.isEmpty) return;
+    final user = User(
+      username: usernameCtrl.text, 
+      password: passwordCtrl.text
+    );
+    await dao.insertUser(user);
+    usernameCtrl.clear();
+    passwordCtrl.clear();
+    cargarUsuarios();
+  }
+
+  Future<void> eliminar(int id) async{
+    await dao.deleteUser(id);
+    cargarUsuarios();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Página principal"),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            TextField(
+              controller: usernameCtrl,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                labelText: "Usuario",
+              ),
+            ),  
+            TextField(
+              controller: passwordCtrl,
+              decoration:  InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                labelText: "Contraseña",
+              ),
+            ),
+            const SizedBox(height: 12.0),
+            ElevatedButton(
+              onPressed: registrar, 
+              child: Text("Registrar"),
+            ),
+            const SizedBox(height: 20.0),
+            Expanded(
+              child: ListView.builder(
+                itemCount: users.length,
+                itemBuilder: (_, i){
+                  return ListTile(
+                    title: Text(users[i].username),
+                    subtitle: Text("ID: ${users[i].id}"),
+                    trailing: IconButton(
+                      onPressed: () => eliminar(users[i].id!), 
+                      icon: Icon(Icons.delete),
+                    ),
+                  );
+                }
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

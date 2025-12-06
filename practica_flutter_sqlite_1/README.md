@@ -20,4 +20,15 @@ Servicios desacoplados (Reutilización de codigo).
  └─ models/
       └─ user.dart
 
+# Pendientes
+
+✔ Crear usuarios
+✔ Guardarlos en SQLite
+✔ Listarlos
+---------------------------
+  Eliminarlos
+  Actualizarlos (si quieres te agrego UI)
+  Buscar
+  Limpiar la base completa
+
 
