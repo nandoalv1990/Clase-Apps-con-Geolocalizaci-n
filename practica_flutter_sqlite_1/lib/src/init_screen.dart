@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../data/user_dao.dart';
-import '../data/db_helper.dart';
 import '../models/user.dart';
 
 class InitScreen extends StatefulWidget {

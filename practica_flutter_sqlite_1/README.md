@@ -27,7 +27,7 @@ Servicios desacoplados (Reutilización de codigo).
 ✔ Listarlos
 ---------------------------
   Eliminarlos
-  Actualizarlos (si quieres te agrego UI)
+  Actualizarlos
   Buscar
   Limpiar la base completa
 
