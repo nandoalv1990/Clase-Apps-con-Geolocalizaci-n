@@ -8,7 +8,7 @@ Modelo de usuario
 BD : Tabla users
 Servicios desacoplados (Reutilización de codigo).
 
- # Estructura
+ ## Estructura
 
  lib/
  ├─ main.dart
@@ -22,13 +22,21 @@ Servicios desacoplados (Reutilización de codigo).
 
 # Pendientes
 
-✔ Crear usuarios
-✔ Guardarlos en SQLite
-✔ Listarlos
+- ✔ Crear usuarios
+- ✔ Guardarlos en SQLite
+- ✔ Listarlos
 ---------------------------
-  Eliminarlos
-  Actualizarlos
-  Buscar
-  Limpiar la base completa
+-  Eliminarlos
+-  Actualizarlos
+-  Buscar
+-  Limpiar la base completa
+
+## Nuevo 8/12/2025
+
+Ingración de:
+
+- Darkmode
+- Crypto: sha256
+- Tabla de roles
 
 

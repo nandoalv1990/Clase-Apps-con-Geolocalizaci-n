@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import '../data/user_dao.dart';
 import '../models/user.dart';
+import '../utils/security.dart';
 
 class InitScreen extends StatefulWidget {
-  const InitScreen({super.key});
+  final VoidCallback onToggleTheme;
+  const InitScreen({super.key, required this.onToggleTheme});
 
   @override
   State<InitScreen> createState() => _InitScreenState();
@@ -29,9 +31,11 @@ class _InitScreenState extends State<InitScreen> {
 
   Future<void> registrar() async {
     if (usernameCtrl.text.isEmpty || passwordCtrl.text.isEmpty) return;
+    final hashed = Security.hashPassword(passwordCtrl.text);
     final user = User(
       username: usernameCtrl.text, 
-      password: passwordCtrl.text
+      password: hashed,
+      roleId: 2,
     );
     await dao.insertUser(user);
     usernameCtrl.clear();
@@ -49,6 +53,12 @@ class _InitScreenState extends State<InitScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Página principal"),
+        actions: [
+          IconButton(
+            onPressed: widget.onToggleTheme, 
+            icon: Icon(Icons.dark_mode),
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

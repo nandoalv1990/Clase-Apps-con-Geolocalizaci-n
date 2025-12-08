@@ -64,4 +64,14 @@ Future<Database> dbSync() async{
     final db = await dbSync();
     return db.delete("users");
   }
+
+  Future<List<Map<String, dynamic>>> getUsersWithRoles() async {
+    final db = await dbSync();
+    return db.rawQuery(
+      """  SELECT u.id, u.username, r.name AS role
+      FROM users u
+      LEF JOIN roles r ON u.roleId = r.id
+      """
+    ); //final users = await dao.getUsersWithRoles();
+  }
 }

@@ -21,12 +21,22 @@ class DbHelper {
       version: 1,
       onCreate: (db, version) async {
         await db.execute(
+          """ CREATE TABLE roles (
+          id INTERGER PRIMARY KEY AUTOINCREMENT,
+          name TEXT NOT NULL
+          ) """
+        );
+        await db.execute(
           """ CREATE TABLE users(
           id INTERGER PRIMARY KEY AUTOINCREMENT,
           username TEXT NOT NULL,
-          password TEXT NOT NULL
+          password TEXT NOT NULL,
+          roleId INTEGER,
+          FOREIGN KEY(roleId) REFERENCES roles(id)
           )
         """);
+        await db.insert("roles", {"name": "ADMIN"});
+        await db.insert("roles", {"name": "USER"});
       },
     );
   }
