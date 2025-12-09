@@ -2,9 +2,47 @@
 
 A new Flutter project.
 
+Proyecto Login/Roles con FireBase core, auth y noSQL.
 
 ## Insrucciones 
 
 
-- Acceder a https://console.firebase.google.com
-- android/app/google-services.json
+ - Acceder a https://console.firebase.google.com
+ - 
+ - android/app/google-services.json
+ - 
+
+## Configuración 
+
+ - DSL Kotlin {El método que usamos fué crear los buil.gradle(Groovy)}:
+ 
+   Archivo de Gradle de nivel de raíz (nivel de proyecto) (<project>/build.gradle.kts):
+
+          plugins {
+    
+             // Add the dependency for the Google services Gradle plugin
+             id("com.google.gms.google-services") version "4.4.4" apply false
+
+           }
+
+- Archivo de Gradle del módulo (nivel de app) (<project>/<app-module>/build.gradle.kts): 
+
+           plugins {
+              //...
+              id("com.android.application")
+              // Add the Google services Gradle plugin
+              id("com.google.gms.google-services")
+                ...
+           }
+
+
+          dependencies {
+
+                // Import the Firebase BoM
+                implementation(platform("com.google.firebase:firebase-bom:34.6.0"))
+                // TODO: Add the dependencies for Firebase products you want to use
+                // When using the BoM, don't specify versions in Firebase dependencies
+                implementation("com.google.firebase:firebase-analytics")
+                 // Add the dependencies for any other desired Firebase products
+                // https://firebase.google.com/docs/android/setup#available-libraries
+           }
