@@ -1,4 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
+//import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 import '../services/user_service.dart';
@@ -22,7 +22,7 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       await auth.login(emailCtrl.text, passCtrl.text);
       final user = await userService.getUser(auth.currentUser!.uid);
-      Navigator.pushReplacement(
+      Navigator.pushReplacement (
         context, 
         MaterialPageRoute(
           builder: (_) => HomeScreen(user: user),
@@ -41,15 +41,26 @@ class _LoginScreenState extends State<LoginScreen> {
       padding: const EdgeInsets.all(16.0),
       child: Column(
         children: [
-          TextField(controller: emailCtrl, decoration: const InputDecoration(labelText: "Email"),),
-          TextField(controller: passCtrl, decoration: const InputDecoration(labelText: "Contraseña"),),
+          TextField(
+            controller: emailCtrl, 
+            decoration: const InputDecoration(labelText: "Email"),
+          ),
+          TextField(
+            controller: passCtrl, 
+            decoration: const InputDecoration(labelText: "Contraseña"),
+          ),
           const SizedBox(height: 16.0,),
-          ElevatedButton(onPressed: login, child: const Text("Iniciar sesión")),
+
+          ElevatedButton(
+            onPressed: login, 
+            child: const Text("Iniciar sesión")
+          ),
           TextButton(
             onPressed: () => Navigator.push(
-              context, context,
+              context,
               MaterialPageRoute(builder: (_) => const RegisterScreen()),
-            ), child: Const Text("Crear cuenta"),)
+            ), child: const Text("Crear cuenta"),
+          )
         ],
       ),
      ),
